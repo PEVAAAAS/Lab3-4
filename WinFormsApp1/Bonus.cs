@@ -7,6 +7,7 @@ namespace WinFormsApp1
     internal class Bonus : GameObject
     {
         private PowerUp powerType;
+        public PowerUp PowerType { get { return powerType; } }
         public Bonus(int x, int y, PowerUp powerType) : base(x, y)
         {
             this.powerType = powerType;

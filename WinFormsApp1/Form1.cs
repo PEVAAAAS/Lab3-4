@@ -9,6 +9,8 @@ namespace WinFormsApp1
             ClientSize = new Size(13 * Settings.Size, 14 * Settings.Size);
             game = new Game(ClientSize.Width, ClientSize.Height);
             game.LoadLevel("Map1.txt");
+            timer1.Start();
+            timer3.Start();
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)
@@ -49,10 +51,28 @@ namespace WinFormsApp1
         private void timer1_Tick(object sender, EventArgs e)
         {
             Random random = new Random();
-            if(random.Next(6)== 3)
+            game.SpawnPowerUp(PowerUp.Shovel);
+            //if (random.Next(6) == 3)
+            //{
+            //    timer1.Stop();
+            //    PowerUp powerUp = (PowerUp)random.Next(6);
+            //    game.SpawnPowerUp(powerUp);
+            //    timer2.Start();
+            //    Invalidate();
+            //}
+        }
+
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            game.NullPowerUp();
+            timer2.Stop();
+            timer1.Start();
+        }
+
+        private void timer3_Tick(object sender, EventArgs e)
+        {
+            if (game.Tick())
             {
-                PowerUp powerUp = (PowerUp)random.Next(6);
-                game.SpawnPowerUp(powerUp);
                 Invalidate();
             }
         }

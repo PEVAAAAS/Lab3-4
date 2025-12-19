@@ -7,6 +7,7 @@ namespace WinFormsApp1
     internal class Eagle : GameObject
     {
         private bool defeat;
+        public int Defence {  get; set; }
         public Eagle(int x, int y) : base(x, y)
         {
         }

@@ -67,6 +67,47 @@ namespace WinFormsApp1
             }
 
         }
+        public void ReplaceEagleWalls(WallType type)
+        {
+            Eagle eagle = gameObjects.OfType<Eagle>().FirstOrDefault();
+            for (int i = eagle.X-1*Settings.Size; i <= eagle.X+1*Settings.Size; i+= Settings.Size)
+            {
+                for (int j = eagle.Y-1*Settings.Size; j <= eagle.Y; j+= Settings.Size)
+                {
+                    if(i == eagle.X && j == eagle.Y)
+                    {
+                        continue;
+                    }
+                    gameObjects.RemoveAll(t => t.X == i && t.Y == j);
+                    Wall wall = new Wall(i, j, type);
+                    gameObjects.Add(wall);
+                }
+            }
+        }
+        public bool Tick()
+        {
+            if(bonus != null)
+            {
+                if(bonus.PowerType == PowerUp.Helm)
+                {
+                    player.Invincible -= 1;
+                    if(player.Invincible == 0)
+                    {
+                        return true;
+                    }
+                }
+                if(bonus.PowerType == PowerUp.Shovel)
+                {
+                    Eagle eagle = gameObjects.OfType<Eagle>().FirstOrDefault();
+                    eagle.Defence -= 1;
+                    if(eagle.Defence == 0)
+                    {
+                        ReplaceEagleWalls(WallType.Brick);
+                    }
+                }
+            }
+            return false;
+        }
         public void MovePlayer(Direction direction)
         {
             player.MoveTank(direction);
@@ -85,6 +126,21 @@ namespace WinFormsApp1
             if(player.Y+Settings.Size > height)
             {
                 player.Y = height - Settings.Size;
+            }
+            if(bonus != null&& bonus.IsCross(player))
+            {
+                if(bonus.PowerType == PowerUp.Helm)
+                {
+                    player.Invincible = 10;
+                    bonus = null;
+                }
+                else if(bonus.PowerType==PowerUp.Shovel)
+                {
+                    Eagle eagle = gameObjects.OfType<Eagle>().FirstOrDefault();
+                    eagle.Defence = 20;
+                    ReplaceEagleWalls(WallType.Steal);
+                    bonus = null;
+                }
             }
             if (gameObjects.Any(t => t.IsCross(player)))
             {
@@ -141,7 +197,7 @@ namespace WinFormsApp1
         }
         public void NullPowerUp()
         {
-
+            bonus = null;
         }
         public void Draw(Graphics graphics)
         {

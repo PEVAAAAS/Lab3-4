@@ -6,12 +6,13 @@ namespace WinFormsApp1
 {
     internal class PlayerTank : Tank
     {
+        public int Invincible { get; set; }
         public int Lives {  get; set; }
         public PlayerTank(int x, int y, TankType type, Direction moveDirection) : base(x, y, type, moveDirection)
         {
             Lives = 3;
         }
-
+        
         public override void Draw(Graphics graphics)
         {
             if(MoveDirection == Direction.North)
@@ -29,6 +30,10 @@ namespace WinFormsApp1
             else if(MoveDirection == Direction.East)
             {
                 graphics.DrawImage(Resource1.SmallTankPlayerRight, X, Y, Settings.TankSize, Settings.TankSize);
+            }
+            if(Invincible > 0)
+            {
+                graphics.DrawRectangle(Pens.Blue, X, Y, Settings.Size, Settings.Size);
             }
         }
     }
